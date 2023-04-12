@@ -1,0 +1,5 @@
+ "Merged Queries" = Table.NestedJoin(InsertChangedType, {"Date"}, PayPeriods, {"EOD"}, "PayPeriods", JoinKind.LeftOuter),
+ "Expanded PayPayPeriods" = Table.ExpandTableColumn(#"Merged Queries", "PayPeriods", {"PP", "EOD", "SEPD"}, {"PP", "EOD", "SEPD"}),
+ "Filled Down" = Table.FillDown(#"Expanded PayPayPeriods",{"PP", "EOD", "SEPD"}),
+ "Filtered Rows" = Table.SelectRows(#"Filled Down", each ([PP] <> null)),
+ "Added Custom" = Table.AddColumn(#"Filtered Rows", "FY & PP", each [Fiscal Year]&" PP"& Text.PadStart( Text.From( [PP] ), 2, "0"))
